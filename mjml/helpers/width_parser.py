@@ -33,13 +33,16 @@ def widthParser(width, parseFloatToInt=True):
         parser = float
     else:
         parser = int
-    width = strip_unit(width_str)
-    parsed_width = parser(width)
-    # LATER: somehow JS works differently here (as it does not have a strict
-    # type sytem). parseFloat() might return a number without fractional but
-    # python does.
-    width_int = int(width)
-    if parsed_width == width_int:
-        parsed_width = width_int
+    try:
+        width = strip_unit(width_str)
+        parsed_width = parser(width)
+        # LATER: somehow JS works differently here (as it does not have a strict
+        # type sytem). parseFloat() might return a number without fractional but
+        # python does.
+        width_int = int(width)
+        if parsed_width == width_int:
+            parsed_width = width_int
+    except:
+        parsed_width = 0
 
     return WidthUnit(width=parsed_width, unit=widthUnit)
