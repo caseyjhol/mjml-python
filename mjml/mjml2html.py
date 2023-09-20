@@ -1,3 +1,4 @@
+import html
 from io import BytesIO, StringIO
 from pathlib import Path, PurePath
 from typing import List, Optional
@@ -229,7 +230,7 @@ def mjml_to_html(xml_fp_or_json, skeleton=None, template_dir=None,
         except ImportError:
             raise ImportError('CSS inlining is an optional feature. Run `pip install -e ".[css_inlining]"` to install the required dependencies.') # noqa: E501
 
-        extra_css = ''.join(globalDatas.inlineStyle)
+        extra_css = html.unescape(''.join(globalDatas.inlineStyle))
         inliner = css_inline.CSSInliner(inline_style_tags=False, extra_css=extra_css, load_remote_stylesheets=False)
         content = inliner.inline(content)
 
