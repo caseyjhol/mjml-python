@@ -1,10 +1,10 @@
 
+from ..helpers import parse_int, widthParser
+from ..lib import merge_dicts
 from ._base import BodyComponent
-from ..helpers import widthParser, parse_int
+
 
 __all__ = ['MjHero']
-
-from ..lib import merge_dicts
 
 
 class MjHero(BodyComponent):
@@ -54,15 +54,17 @@ class MjHero(BodyComponent):
 
     def getChildContext(self):
         containerWidth = self.context['containerWidth']
-        paddingSize = self.getShorthandAttrValue('padding', 'left') + self.getShorthandAttrValue('padding', 'right')
+        padding_left = self.getShorthandAttrValue('padding', 'left')
+        padding_right = self.getShorthandAttrValue('padding', 'right')
+        paddingSize = padding_left + padding_right
 
-        currentContainerWidth = f'{parse_int(containerWidth)}px'
-        parsedWidth, unit = widthParser(currentContainerWidth, parseFloatToInt=False)
-
+        container_width: int = parse_int(containerWidth)
+        parsed_width, unit = widthParser(f'{container_width}px', parseFloatToInt=False)
         if unit == '%':
-            currentContainerWidth = f'{(parse_int(containerWidth) * parsedWidth) / 100 - paddingSize}px'
+            container_width = (container_width * parsed_width) / 100 - paddingSize
         else:
-            currentContainerWidth = f'{parsedWidth - paddingSize}px'
+            container_width = parsed_width - paddingSize
+        currentContainerWidth = f'{container_width}px'
 
         return merge_dicts(
             self.context,
@@ -73,8 +75,8 @@ class MjHero(BodyComponent):
     # js: getStyles()
     def get_styles(self):
         containerWidth = self.context['containerWidth']
-        backgroundHeight = self.getAttribute('background-height')
-        backgroundWidth = self.getAttribute('background-width')
+        backgroundHeight = self.get_attr('background-height')
+        backgroundWidth = self.get_attr('background-width')
         backgroundRatio = round(
             (parse_int(backgroundHeight) /
              parse_int(backgroundWidth)) *
@@ -100,15 +102,15 @@ class MjHero(BodyComponent):
             },
             'hero'               : {
                 'background'         : self.getBackground(),
-                'background-position': self.getAttribute('background-position'),
+                'background-position': self.get_attr('background-position'),
                 'background-repeat'  : 'no-repeat',
-                'border-radius'      : self.getAttribute('border-radius'),
-                'padding'            : self.getAttribute('padding'),
-                'padding-top'        : self.getAttribute('padding-top'),
-                'padding-left'       : self.getAttribute('padding-left'),
-                'padding-right'      : self.getAttribute('padding-right'),
-                'padding-bottom'     : self.getAttribute('padding-bottom'),
-                'vertical-align'     : self.getAttribute('vertical-align'),
+                'border-radius'      : self.get_attr('border-radius'),
+                'padding'            : self.get_attr('padding'),
+                'padding-top'        : self.get_attr('padding-top'),
+                'padding-left'       : self.get_attr('padding-left'),
+                'padding-right'      : self.get_attr('padding-right'),
+                'padding-bottom'     : self.get_attr('padding-bottom'),
+                'vertical-align'     : self.get_attr('vertical-align'),
             },
             'outlook-table'      : {
                 'width': containerWidth,
@@ -131,27 +133,27 @@ class MjHero(BodyComponent):
                 'z-index'                : '-3',
             },
             'outlook-inner-td'   : {
-                'background-color': self.getAttribute('inner-background-color'),
-                'padding'         : self.getAttribute('inner-padding'),
-                'padding-top'     : self.getAttribute('inner-padding-top'),
-                'padding-left'    : self.getAttribute('inner-padding-left'),
-                'padding-right'   : self.getAttribute('inner-padding-right'),
-                'padding-bottom'  : self.getAttribute('inner-padding-bottom'),
+                'background-color': self.get_attr('inner-background-color'),
+                'padding'         : self.get_attr('inner-padding'),
+                'padding-top'     : self.get_attr('inner-padding-top'),
+                'padding-left'    : self.get_attr('inner-padding-left'),
+                'padding-right'   : self.get_attr('inner-padding-right'),
+                'padding-bottom'  : self.get_attr('inner-padding-bottom'),
             },
             'inner-table'        : {
                 'width' : '100%',
                 'margin': '0px',
             },
             'inner-div'          : {
-                'background-color': self.getAttribute('inner-background-color'),
-                'float'           : self.getAttribute('align', missing_ok=True),
+                'background-color': self.get_attr('inner-background-color'),
+                'float'           : self.get_attr('align', missing_ok=True),
                 'margin'          : '0px auto',
-                'width'           : self.getAttribute('width', missing_ok=True),
+                'width'           : self.get_attr('width', missing_ok=True),
             },
         }
 
     def hasBackground(self):
-        return bool(self.getAttribute('background-url'))
+        return bool(self.get_attr('background-url'))
 
     def getBackground(self):
         if self.hasBackground():
@@ -255,10 +257,8 @@ class MjHero(BodyComponent):
             'style': 'hero',
         }
         mode = self.getAttribute('mode')
-
         if mode == 'fluid-height':
             magicTd = self.html_attrs(style='td-fluid')
-
             return f'''
                 <td {magicTd} />
                 <td {self.html_attrs(**commonAttributes)}>
@@ -267,11 +267,10 @@ class MjHero(BodyComponent):
                 <td {magicTd} />
             '''
         else:
-            height =\
-                parse_int(self.getAttribute('height')) -\
-                self.getShorthandAttrValue('padding', 'top') -\
-                self.getShorthandAttrValue('padding', 'bottom')
-
+            height_attr = parse_int(self.getAttribute('height'))
+            padding_top = self.getShorthandAttrValue('padding', 'top')
+            paddig_bottom = self.getShorthandAttrValue('padding', 'bottom')
+            height = height_attr - padding_top - paddig_bottom
             return f'''
                 <td {self.html_attrs(**commonAttributes, height=height)}>
                     {self.renderContent()}

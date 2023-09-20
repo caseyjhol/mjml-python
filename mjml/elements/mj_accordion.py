@@ -50,16 +50,38 @@ class MjAccordion(BodyComponent):
             @media yahoo, only screen and (min-width:0) {
                 .mj-accordion-element { display:block; }
                 input.mj-accordion-checkbox, .mj-accordion-less { display:none!important; }
-                input.mj-accordion-checkbox + * .mj-accordion-title { cursor:pointer; touch-action:manipulation; -webkit-user-select:none; -moz-user-select:none; user-select:none; }
-                input.mj-accordion-checkbox + * .mj-accordion-content { overflow:hidden; display:none; }
+                input.mj-accordion-checkbox + * .mj-accordion-title {
+                    cursor:pointer;
+                    touch-action:manipulation;
+                    -webkit-user-select:none;
+                    -moz-user-select:none;
+                    user-select:none;
+                }
+                input.mj-accordion-checkbox + * .mj-accordion-content {
+                    overflow:hidden;
+                    display:none;
+                }
                 input.mj-accordion-checkbox + * .mj-accordion-more { display:block!important; }
                 input.mj-accordion-checkbox:checked + * .mj-accordion-content { display:block; }
-                input.mj-accordion-checkbox:checked + * .mj-accordion-more { display:none!important; }
-                input.mj-accordion-checkbox:checked + * .mj-accordion-less { display:block!important; }
+                input.mj-accordion-checkbox:checked + * .mj-accordion-more {
+                    display:none!important;
+                }
+                input.mj-accordion-checkbox:checked + * .mj-accordion-less {
+                    display:block!important;
+                }
             }
 
-            .moz-text-html input.mj-accordion-checkbox + * .mj-accordion-title { cursor: auto; touch-action: auto; -webkit-user-select: auto; -moz-user-select: auto; user-select: auto; }
-            .moz-text-html input.mj-accordion-checkbox + * .mj-accordion-content { overflow: hidden; display: block; }
+            .moz-text-html input.mj-accordion-checkbox + * .mj-accordion-title {
+                cursor: auto;
+                touch-action: auto;
+                -webkit-user-select: auto;
+                -moz-user-select: auto;
+                user-select: auto;
+            }
+            .moz-text-html input.mj-accordion-checkbox + * .mj-accordion-content {
+                overflow: hidden;
+                display: block;
+            }
             .moz-text-html input.mj-accordion-checkbox + * .mj-accordion-ico { display: none; }
 
             @goodbye { @gmail }
@@ -71,24 +93,24 @@ class MjAccordion(BodyComponent):
             'table': {
                 'width'          : '100%',
                 'border-collapse': 'collapse',
-                'border'         : self.getAttribute('border'),
+                'border'         : self.get_attr('border'),
                 'border-bottom'  : 'none',
-                'font-family'    : self.getAttribute('font-family'),
+                'font-family'    : self.get_attr('font-family'),
             },
         }
 
     def render(self):
         children = self.props['children']
         children_attrs = {
-            'border'            : self.getAttribute('border'),
-            'icon-align'        : self.getAttribute('icon-align'),
-            'icon-width'        : self.getAttribute('icon-width'),
-            'icon-height'       : self.getAttribute('icon-height'),
-            'icon-position'     : self.getAttribute('icon-position'),
-            'icon-wrapped-url'  : self.getAttribute('icon-wrapped-url'),
-            'icon-wrapped-alt'  : self.getAttribute('icon-wrapped-alt'),
-            'icon-unwrapped-url': self.getAttribute('icon-unwrapped-url'),
-            'icon-unwrapped-alt': self.getAttribute('icon-unwrapped-alt'),
+            'border'            : self.get_attr('border'),
+            'icon-align'        : self.get_attr('icon-align'),
+            'icon-width'        : self.get_attr('icon-width'),
+            'icon-height'       : self.get_attr('icon-height'),
+            'icon-position'     : self.get_attr('icon-position'),
+            'icon-wrapped-url'  : self.get_attr('icon-wrapped-url'),
+            'icon-wrapped-alt'  : self.get_attr('icon-wrapped-alt'),
+            'icon-unwrapped-url': self.get_attr('icon-unwrapped-url'),
+            'icon-unwrapped-alt': self.get_attr('icon-unwrapped-alt'),
         }
         table_attrs = self.html_attrs(
             cellspacing='0',
@@ -101,4 +123,3 @@ class MjAccordion(BodyComponent):
                 {self.renderChildren(children, attributes=children_attrs)}
             </table>
         '''
-

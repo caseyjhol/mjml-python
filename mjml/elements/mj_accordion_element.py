@@ -1,10 +1,9 @@
 
+from ..helpers import conditionalTag
 from ._base import BodyComponent
 
 
 __all__ = ['MjAccordionElement']
-
-from ..helpers import conditionalTag
 
 
 class MjAccordionElement(BodyComponent):
@@ -42,11 +41,11 @@ class MjAccordionElement(BodyComponent):
         return {
             'td'   : {
                 'padding'         : '0px',
-                'background-color': self.getAttribute('background-color'),
+                'background-color': self.get_attr('background-color'),
             },
             'label': {
                 'font-size'  : '13px',
-                'font-family': self.getAttribute('font-family'),
+                'font-family': self.get_attr('font-family'),
             },
             'input': {
                 'display': 'none',
@@ -54,20 +53,19 @@ class MjAccordionElement(BodyComponent):
         }
 
     def handleMissingChildren(self):
-        from . import MjAccordionText
-        from . import MjAccordionTitle
+        from . import MjAccordionText, MjAccordionTitle
 
         children = self.props['children']
         children_attrs = {
-            'border'            : self.getAttribute('border'),
-            'icon-align'        : self.getAttribute('icon-align'),
-            'icon-width'        : self.getAttribute('icon-width'),
-            'icon-height'       : self.getAttribute('icon-height'),
-            'icon-position'     : self.getAttribute('icon-position'),
-            'icon-wrapped-url'  : self.getAttribute('icon-wrapped-url'),
-            'icon-wrapped-alt'  : self.getAttribute('icon-wrapped-alt'),
-            'icon-unwrapped-url': self.getAttribute('icon-unwrapped-url'),
-            'icon-unwrapped-alt': self.getAttribute('icon-unwrapped-alt'),
+            'border'            : self.get_attr('border'),
+            'icon-align'        : self.get_attr('icon-align'),
+            'icon-width'        : self.get_attr('icon-width'),
+            'icon-height'       : self.get_attr('icon-height'),
+            'icon-position'     : self.get_attr('icon-position'),
+            'icon-wrapped-url'  : self.get_attr('icon-wrapped-url'),
+            'icon-wrapped-alt'  : self.get_attr('icon-wrapped-alt'),
+            'icon-unwrapped-url': self.get_attr('icon-unwrapped-url'),
+            'icon-unwrapped-alt': self.get_attr('icon-unwrapped-alt'),
         }
         has_title = False
         has_text = False
@@ -100,21 +98,18 @@ class MjAccordionElement(BodyComponent):
 
 
     def render(self):
+        checkbox_attrs = self.html_attrs(
+            class_='mj-accordion-checkbox',
+            type='checkbox',
+            style='input',
+        )
+        checkbox = f'<input {checkbox_attrs} />'
         label_attrs = self.html_attrs(
             class_='mj-accordion-element',
             style='label',
         )
-        checkbox = f'''
-            <input
-                {self.html_attrs(
-                    class_='mj-accordion-checkbox',
-                    type='checkbox',
-                    style='input',
-                )}
-            />
-        '''
         return f'''
-            <tr {self.html_attrs(class_=self.getAttribute('css-class', missing_ok=True))}>
+            <tr {self.html_attrs(class_=self.get_attr('css-class', missing_ok=True))}>
                 <td {self.html_attrs(style='td')}>
                     <label {label_attrs}>
                         {conditionalTag(checkbox, True)}
@@ -125,4 +120,3 @@ class MjAccordionElement(BodyComponent):
                 </td>
             </tr>
         '''
-

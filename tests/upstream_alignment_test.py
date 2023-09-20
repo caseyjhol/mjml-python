@@ -3,12 +3,11 @@ from json import load as json_load
 from unittest import SkipTest, TestCase
 
 from bs4 import BeautifulSoup
-from ddt import ddt as DataDrivenTestCase, data as ddt_data
+from ddt import data as ddt_data, ddt as DataDrivenTestCase
 from htmlcompare import assert_same_html
 
 from mjml import mjml_to_html
 from mjml.testing_helpers import get_mjml_fp, load_expected_html
-
 
 
 @DataDrivenTestCase
@@ -37,8 +36,8 @@ class UpstreamAlignmentTest(TestCase):
         'mj-head-with-comment',
         'mj-image-with-empty-alt-attribute',
         'mj-image-with-href',
-        'mj-section-with-css-class',
         'mj-section-with-full-width',
+        'mj-section-with-css-class',
         'mj-section-with-mj-class',
         'mj-section-with-background-url',
         'mj-font',
@@ -86,7 +85,7 @@ class UpstreamAlignmentTest(TestCase):
 
     def test_can_use_css_inlining(self):
         try:
-            import css_inline
+            import css_inline  # noqa: unused-import
         except ImportError:
             raise SkipTest('"css_inline" not installed')
         test_id = 'css-inlining'
@@ -130,10 +129,12 @@ class UpstreamAlignmentTest(TestCase):
         actual_soup = BeautifulSoup(result.html, 'html.parser')
 
         # This ID is randomly generated, so we need to manually replace it.
-        expected_carousel_id = expected_soup.find(attrs={'class': 'mj-carousel-radio'})['name'].replace('mj-carousel-radio-', '')
-        actual_carousel_id = actual_soup.find(attrs={'class': 'mj-carousel-radio'})['name'].replace('mj-carousel-radio-', '')
+        def _replace_random_radio_class(soup):
+            _mj_cr_str = 'mj-carousel-radio'
+            return soup.find(attrs={'class': _mj_cr_str})['name'].replace(f'{_mj_cr_str}-', '')
+        expected_carousel_id = _replace_random_radio_class(expected_soup)
+        actual_carousel_id = _replace_random_radio_class(actual_soup)
         actual_html = str(actual_soup).replace(actual_carousel_id, expected_carousel_id)
-
         assert_same_html(str(expected_soup), actual_html, verbose=True)
 
     # htmlcompare is currently unable to detect these kind of
@@ -151,4 +152,3 @@ class UpstreamAlignmentTest(TestCase):
         assert (expected_text == actual_text)
         actual_html = (body_actual.select('.mj-column-per-100 div')[0]).renderContents()
         assert (b'foo <b>bar</b>.' == actual_html)
-
